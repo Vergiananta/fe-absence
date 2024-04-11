@@ -1,11 +1,16 @@
 import { NextPage } from "next";
 import AbsenceComponent from "../components/absence";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 
 const Absence: NextPage = () => {
   const [absence, setAbsence] = useState();
-
-  useEffect(() => {}, []);
+  const router = useRouter();
+  useEffect(() => {
+    if (!sessionStorage.getItem("token")) {
+      router.push("/login");
+    }
+  }, []);
   return <AbsenceComponent absenceData={absence} />;
 };
 

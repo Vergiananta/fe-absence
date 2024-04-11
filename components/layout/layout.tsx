@@ -18,7 +18,6 @@ export const Layout = ({ children }: Props) => {
   };
   const [token, setToken] = useState<string | null>();
   useEffect(() => {
-    sessionStorage.setItem("token", "ysession");
     setToken(sessionStorage.getItem("token"));
   });
   const auth = token ? true : false;

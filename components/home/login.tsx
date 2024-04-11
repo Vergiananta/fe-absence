@@ -3,6 +3,7 @@ import { Box } from "../styles/box";
 import { Flex } from "../styles/flex";
 import { FormEvent, useState, MouseEvent, MouseEventHandler } from "react";
 import { useRouter } from "next/router";
+import { BASEURL } from "../utils/base-url";
 
 interface LoginObj {
   nik?: string;
@@ -15,8 +16,26 @@ export const LoginComponent = () => {
     setLogin({ ...login, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: any) => {
-    router.push("/");
+  const handleSubmit = async (e: any) => {
+    try {
+      console.log("data: ", login);
+
+      const data = await fetch(`${BASEURL}/user/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(login),
+      });
+      if (data.status === 200) {
+        const userData = await data.json();
+
+        sessionStorage.setItem("token", userData.data.token);
+        router.push("/");
+      }
+    } catch (error) {
+      console.log("error login: ", error);
+    }
   };
   return (
     <Box
