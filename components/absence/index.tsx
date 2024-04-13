@@ -1,13 +1,40 @@
 import React from "react";
 import { Box } from "../styles/box";
 import { Button, Card, Divider } from "@nextui-org/react";
+import { AbsenceObj } from "../../pages";
 interface Props {
-  absenceData: any;
+  absenceData?: AbsenceObj;
 }
 const AbsenceComponent = ({ absenceData }: Props) => {
-  const handleAbsence = () => {
+  const handleAbsence = async () => {
     if (absenceData) {
+      try {
+        const res = await fetch(
+          `${process.env.BASE_URL_USER}/user/absence/out`,
+          {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+            },
+          }
+        );
+        if (res.status === 200) {
+          absenceData.timeOut = new Date().toDateString();
+        }
+      } catch (error) {
+        console.error("error out absence: ", error);
+      }
     } else {
+      try {
+        await fetch(`${process.env.BASE_URL_USER}/user/absence/in`, {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+          },
+        });
+      } catch (error) {
+        console.error("error out absence: ", error);
+      }
     }
   };
   return (
@@ -22,14 +49,22 @@ const AbsenceComponent = ({ absenceData }: Props) => {
       >
         <Card.Header className="pb-0 pt-2 px-4 flex-col items-start">
           <p className="text-tiny uppercase font-bold text-center">
-            Are you have {absenceData ? "Clock out?" : "Clock in?"}
+            {absenceData?.timeIn && !absenceData?.timeOut
+              ? "Are you have Clock out?"
+              : absenceData?.timeOut && absenceData?.timeIn
+              ? "Your attendance today is complete"
+              : "Are you have Clock in?"}
           </p>
         </Card.Header>
         <Divider />
         <Card.Body className="overflow-visible py-2">
-          <Button auto onClick={handleAbsence}>
-            {absenceData ? "Clock out" : "Clock in"}
-          </Button>
+          {absenceData?.timeIn && absenceData?.timeOut ? null : (
+            <Button auto onClick={handleAbsence}>
+              {absenceData?.timeIn && !absenceData?.timeOut
+                ? "Clock out"
+                : "Clock in"}
+            </Button>
+          )}
         </Card.Body>
       </Card>
     </Box>

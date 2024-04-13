@@ -18,9 +18,7 @@ export const LoginComponent = () => {
 
   const handleSubmit = async (e: any) => {
     try {
-      console.log("data: ", login);
-
-      const data = await fetch(`${BASEURL}/user/login`, {
+      const data = await fetch(`${process.env.BASE_URL_USER}/user/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -32,6 +30,7 @@ export const LoginComponent = () => {
 
         sessionStorage.setItem("token", userData.data.token);
         router.push("/");
+        console.log("menuju home");
       }
     } catch (error) {
       console.log("error login: ", error);
@@ -92,7 +91,7 @@ export const LoginComponent = () => {
         </Card.Body>
         <Divider css={{ my: "$5" }} />
         <Card.Footer>
-          <Button auto onClick={handleSubmit}>
+          <Button auto onPress={handleSubmit}>
             Login
           </Button>
         </Card.Footer>
