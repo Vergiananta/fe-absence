@@ -15,15 +15,26 @@ const Absence: NextPage = () => {
 
   const router = useRouter();
   const handleUserData = async () => {
-    const res = await fetch(`${process.env.BASE_URL_ABSENCE}/absence`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${sessionStorage.getItem("token")}`,
-        "Content-Type": "application/json",
-      },
-    });
-    if (res.status === 200) {
-      setData(await res.json());
+    try {
+      const res = await fetch(`${process.env.BASE_URL_ABSENCE}/absence`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem("token")}`,
+          "Content-Type": "application/json",
+        },
+      });
+      if (res.status === 200) {
+        try {
+          const absenceData = await res.json();
+          setData(absenceData.data);
+        } catch (jsonError) {
+          console.error("Error parsing JSON:", jsonError);
+        }
+      } else if (res.status === 401) {
+        router.push("/login");
+      }
+    } catch (error) {
+      console.error("error absence: ", error);
     }
   };
 
@@ -33,6 +44,6 @@ const Absence: NextPage = () => {
     }
     handleUserData();
   }, []);
-  return <AbsenceComponent absenceData={data} />;
+  return <AbsenceComponent absenceData={data} reload={handleUserData}/>;
 };
 export default Absence;

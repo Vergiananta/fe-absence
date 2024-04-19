@@ -4,8 +4,12 @@ import { Box } from "../styles/box";
 import { Flex } from "../styles/flex";
 import { TableWrapper } from "../table/table";
 import NextLink from "next/link";
+import { Absence } from "../../pages/dashboard";
 
-export const Content = () => (
+export interface UserData {
+  users: Absence[];
+}
+export const Content = ({ users }: UserData) => (
   <Box css={{ overflow: "hidden", height: "100%" }}>
     <Flex
       css={{
@@ -72,7 +76,7 @@ export const Content = () => (
           </Link>
         </NextLink>
       </Flex>
-      <TableWrapper />
+      <TableWrapper users={users} />
     </Flex>
   </Box>
 );

@@ -10,8 +10,10 @@ import { SidebarMenu } from "./sidebar-menu";
 import { useSidebarContext } from "../layout/layout-context";
 import { ChangeLogIcon } from "../icons/sidebar/changelog-icon";
 import { useRouter } from "next/router";
-
-export const SidebarWrapper = () => {
+interface Props {
+  decoded: any;
+}
+export const SidebarWrapper = ({ decoded }: Props) => {
   const router = useRouter();
   const { collapsed, setCollapsed } = useSidebarContext();
 
@@ -39,20 +41,22 @@ export const SidebarWrapper = () => {
               isActive={router.pathname === "/"}
               href="/"
             />
-            <SidebarMenu title="Main Menu">
-              <SidebarItem
-                title="Dashboard"
-                icon={<HomeIcon />}
-                isActive={router.pathname === "/dashboard"}
-                href="dashboard"
-              />
-              <SidebarItem
-                isActive={router.pathname === "/accounts"}
-                title="Accounts"
-                icon={<AccountsIcon />}
-                href="accounts"
-              />
-            </SidebarMenu>
+            {decoded?.role === "ADMIN" ? (
+              <SidebarMenu title="Main Menu">
+                <SidebarItem
+                  title="Dashboard"
+                  icon={<HomeIcon />}
+                  isActive={router.pathname === "/dashboard"}
+                  href="dashboard"
+                />
+                <SidebarItem
+                  isActive={router.pathname === "/accounts"}
+                  title="Accounts"
+                  icon={<AccountsIcon />}
+                  href="accounts"
+                />
+              </SidebarMenu>
+            ) : null}
           </Sidebar.Body>
           <Sidebar.Footer>
             <Tooltip content={"Profile"} rounded color="primary">

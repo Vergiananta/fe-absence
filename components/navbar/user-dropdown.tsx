@@ -1,10 +1,17 @@
 import { Avatar, Dropdown, Navbar, Text } from "@nextui-org/react";
 import React from "react";
 import { DarkModeSwitch } from "./darkmodeswitch";
+import { useRouter } from "next/router";
 interface Props {
   auth: boolean;
 }
 export const UserDropdown = ({ auth }: Props) => {
+  const router = useRouter();
+  const handleLogout = (e: any) => {
+    e.preventDefault();
+    sessionStorage.removeItem("token");
+    router.push("/login");
+  };
   return (
     <Dropdown placement="bottom-right">
       <Navbar.Item>
@@ -23,17 +30,8 @@ export const UserDropdown = ({ auth }: Props) => {
           aria-label="User menu actions"
           onAction={(actionKey) => console.log({ actionKey })}
         >
-          <Dropdown.Item key="profile" css={{ height: "$18" }}>
-            <Text b color="inherit" css={{ d: "flex" }}>
-              Signed in as
-            </Text>
-            <Text b color="inherit" css={{ d: "flex" }}>
-              zoey@example.com
-            </Text>
-          </Dropdown.Item>
-
           <Dropdown.Item key="logout" withDivider color="error">
-            Log Out
+            <div onClick={handleLogout}>Log Out</div>
           </Dropdown.Item>
           <Dropdown.Item key="switch" withDivider>
             <DarkModeSwitch />

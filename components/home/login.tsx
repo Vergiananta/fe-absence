@@ -30,10 +30,9 @@ export const LoginComponent = () => {
 
         sessionStorage.setItem("token", userData.data.token);
         router.push("/");
-        console.log("menuju home");
       }
     } catch (error) {
-      console.log("error login: ", error);
+      console.error("error login: ", error);
     }
   };
   return (

@@ -3,12 +3,16 @@ import Link from "next/link";
 import React from "react";
 import { Breadcrumbs, Crumb, CrumbLink } from "../breadcrumb/breadcrumb.styled";
 import { HouseIcon } from "../icons/breadcrumb/house-icon";
-import { UsersIcon } from "../icons/breadcrumb/users-icon";
 import { Flex } from "../styles/flex";
-import { TableWrapper } from "../table/table";
+import { TableWrapper } from "../table-account/table";
 import { AddUser } from "./add-user";
-
-export const Accounts = () => {
+import { UserAccount } from "../../pages/accounts";
+interface AccountData {
+  users: UserAccount[];
+  data: any;
+  reload?: any;
+}
+export const Accounts = ({ users, data, reload }: AccountData) => {
   return (
     <Flex
       css={{
@@ -51,17 +55,14 @@ export const Accounts = () => {
           }}
           align={"center"}
         >
-          <Input
-            css={{ width: "100%", maxW: "410px" }}
-            placeholder="Search users"
-          />
+
         </Flex>
         <Flex direction={"row"} css={{ gap: "$6" }} wrap={"wrap"}>
-          <AddUser />
+          <AddUser data={data} reload={reload} />
         </Flex>
       </Flex>
 
-      <TableWrapper />
+      <TableWrapper users={users} reload={reload} />
     </Flex>
   );
 };
